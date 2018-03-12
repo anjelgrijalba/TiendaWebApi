@@ -159,10 +159,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Data\Prueba.mdf" />
-    <Content Include="App_Data\Prueba_log.ldf">
-      <DependentUpon>Prueba.mdf</DependentUpon>
-    </Content>
     <Content Include="App_Data\TiendaVirtual.mdf" />
     <Content Include="App_Data\TiendaVirtual_log.ldf">
       <DependentUpon>TiendaVirtual.mdf</DependentUpon>

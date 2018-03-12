@@ -44,6 +44,7 @@
     <Compile Include="DaoFactory.cs" />
     <Compile Include="DaoFacturaColecciones.cs" />
     <Compile Include="DaoProductoColecciones.cs" />
+    <Compile Include="DaoProductoSqlServer.cs" />
     <Compile Include="DaoUsuarioColecciones.cs" />
     <Compile Include="DaoUsuarioSqlServer.cs" />
     <Compile Include="IDaoFactura.cs" />

@@ -20,13 +20,14 @@ namespace PresentacionAspNetMvc
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
             string cadenaConexion =
-                System.Configuration.ConfigurationManager.
-                ConnectionStrings["TiendaVirtual"].
-                ConnectionString;
-
+              System.Configuration.ConfigurationManager.
+               ConnectionStrings["TiendaVirtual"].
+               ConnectionString;
+          
             string tipo = System.Configuration.ConfigurationManager.AppSettings["motorDao"];
 
             Application["logicaNegocio"] = new LogicaNegocio(tipo, cadenaConexion);
+
         }
 
         protected void Session_Start()
