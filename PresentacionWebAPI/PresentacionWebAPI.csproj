@@ -81,6 +81,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Data\TiendaVirtual.mdf" />
+    <Content Include="App_Data\TiendaVirtual_log.ldf">
+      <DependentUpon>TiendaVirtual.mdf</DependentUpon>
+    </Content>
     <Content Include="backend.html" />
     <Content Include="css\backend.css" />
     <Content Include="css\bootstrap.min.css" />
@@ -116,7 +120,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Data\" />
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
