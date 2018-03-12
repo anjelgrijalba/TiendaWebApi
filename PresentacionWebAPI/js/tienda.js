@@ -35,3 +35,40 @@ $(function () {
         //$('#cantidad').val($('#cantidad').val() + 1);
     });
 });
+
+var url = "/api/Productos";
+
+$(function () {
+    console.clear();
+
+    $ficha = $('#productito');
+
+    $ficha.detach();
+
+    console.log($linea);
+
+    $.getJSON(url, ProductoOK).fail(fallo);  //rellena lista de productos
+   
+
+   
+});
+
+function ProductoOK(comics) {
+    $comics = $('#Comics');
+
+    $comics.empty();
+
+    $.each(comics, function (key, comic) {
+        $linea = $linea.clone();
+
+        $linea.find('.NombreEditorial').text(comic.Editorial.Nombre);
+        $linea.find('.Titulo').text(comic.Titulo);
+        //$linea.find('.detalles').prop('href', url + "/" + comic.Id).click(comicdetalle);
+        $linea.find('.borrar').prop('href', url + "/" + comic.Id).click(comicborrar);
+        $linea.find('.actualizar').prop('href', url + "/" + comic.Id).click(comicactualizar);
+
+        $comics.append($linea);
+
+        console.log(key, comic);
+    });
+}
