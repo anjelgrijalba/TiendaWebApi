@@ -28,7 +28,7 @@ namespace PresentacionWebAPI
 
             string tipo = System.Configuration.ConfigurationManager.AppSettings["motorDao"];
 
-            Application["logicaNegocio"] = new LogicaNegocio(tipo, cadenaConexion);
+            HttpContext.Current.Application["logicaNegocio"] = new LogicaNegocio(tipo, cadenaConexion);
 
         }
 

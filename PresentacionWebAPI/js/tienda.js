@@ -1,9 +1,10 @@
 $(function () {
-    $('#ficha, #carrito, #factura, #login').hide();
+   
 
-    //Cambios de pantalla
-    $('#btnAddCarrito').click(function () {
-        //alert($(this).data('id'));
+   // Cambios de pantalla
+    $('#btnAddCarrito').click(function (e) {
+        
+        alert($(this).data('id'));
         $('#index').hide(); //fadeOut(2000); //slideUp(); //hide();
         $('#ficha').show(); //fadeIn(2000); //slideDown(); //show();
     });
@@ -40,35 +41,68 @@ var url = "/api/Productos";
 
 $(function () {
     console.clear();
+    $('#ficha, #carrito, #factura, #login').hide();
 
-    $ficha = $('#productito');
+    $oferta = $('#productito');
 
-    $ficha.detach();
+    $ficha = $('#ficha');
 
-    console.log($linea);
+    $oferta.detach();
+
+    console.log($oferta);
 
     $.getJSON(url, ProductoOK).fail(fallo);  //rellena lista de productos
-   
-
-   
+    
+      
 });
 
-function ProductoOK(comics) {
-    $comics = $('#Comics');
+function ProductoOK(productos) {
+    $ofertas = $('#ofertas');
 
-    $comics.empty();
+    //$ofertas.empty();
+    
+    $.each(productos, function (key, prod) {
+        $oferta = $oferta.clone();
 
-    $.each(comics, function (key, comic) {
-        $linea = $linea.clone();
+        $oferta.find('img.thumbnail').attr('src', 'fotos/' + prod.Id + '.png').attr('height', '235px').attr('width', '235px');
+        $oferta.find('h3#nombre').text(prod.Nombre);
+        $oferta.find('a#btnAddCarrito').data('id', prod.Id);
+        $oferta.find('a#btnAddCarrito').prop('href', url + "/" + prod.Id).click(mostrarFicha);
 
-        $linea.find('.NombreEditorial').text(comic.Editorial.Nombre);
-        $linea.find('.Titulo').text(comic.Titulo);
-        //$linea.find('.detalles').prop('href', url + "/" + comic.Id).click(comicdetalle);
-        $linea.find('.borrar').prop('href', url + "/" + comic.Id).click(comicborrar);
-        $linea.find('.actualizar').prop('href', url + "/" + comic.Id).click(comicactualizar);
+        //$oferta.find('a#btnAddCarrito').attr("href", url + " / " + prod.Id);
+               
+        $ofertas.append($oferta);
 
-        $comics.append($linea);
-
-        console.log(key, comic);
+        console.log(key, prod);
     });
+}
+
+function mostrarFicha(e) {
+   // e.preventDefault();
+
+    //alert($(this).data('id'));
+
+    $('#index').hide(); //fadeOut(2000); //slideUp(); //hide();
+    $ficha.show(); //fadeIn(2000); //slideDown(); //show();
+    
+    //$.getJSON(this.href, function(prod) {
+    $.getJSON(url + "/" + prod.Id, function (prod) {
+        $ficha.find('h2#etiqueta').text(prod.Id);
+       
+        
+    });
+
+
+   
+}
+
+function fallo(jqXHR, textStatus, errorThrown) {
+    if (jqXHR.readyState === 0) {
+        errorThrown = "ERROR DE CONEXIÓN";
+    }
+
+    console.log(jqXHR, textStatus, errorThrown);
+
+    //$('#cuadroerror').show();
+    //$('#textoerror').text(errorThrown);
 }

@@ -30,13 +30,14 @@ namespace TiendaVirtual.AccesoDatos
         }
         public IDaoProducto GetDaoProducto()
         {
-            return new DaoProductoColecciones();
-            //switch (tipo)
-            //{
-            //    case "coleccion": return new DaoProductoColecciones();
-            //    default:
-            //        throw new NotImplementedException("No existe la opción " + tipo);
-            //}
+            //return new DaoProductoColecciones();
+            switch (tipo)
+            {
+                case "coleccion": return new DaoProductoColecciones();
+                case "SqlServer": return new DaoProductoSqlServer(cadenaConexion);
+                default:
+                    throw new NotImplementedException("No existe la opción " + tipo);
+            }
         }
 
         public IDaoFactura GetDaoFactura()

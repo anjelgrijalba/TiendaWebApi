@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Web;
 using System.Web.Http;
 using TiendaVirtual.Entidades;
 using TiendaVirtual.LogicaNegocio;
@@ -14,8 +15,8 @@ namespace PresentacionWebAPI.Controllers
         // GET: api/Productos
         public IEnumerable<IProducto> Get()
         {
-            LogicaNegocio ln = new LogicaNegocio();
-            return ln.ListadoProductos();
+             var ln = (ILogicaNegocio)HttpContext.Current.Application["logicaNegocio"];
+             return ln.ListadoProductos();
         }
 
         // GET: api/Productos/5
