@@ -20,9 +20,16 @@ namespace PresentacionWebAPI.Controllers
         }
 
         // GET: api/Productos/5
-        public string Get(int id)
+        public IProducto Get(int id)
         {
-            return "value";
+            var ln = (ILogicaNegocio)HttpContext.Current.Application["logicaNegocio"];
+            IProducto producto = ln.BuscarProductoPorId(id);
+            if (producto == null)
+            {
+                return null;
+            }
+
+            return producto;
         }
 
         // POST: api/Productos
