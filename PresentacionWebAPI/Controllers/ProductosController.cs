@@ -46,5 +46,12 @@ namespace PresentacionWebAPI.Controllers
         public void Delete(int id)
         {
         }
+
+        [Route("Productos/Agregar/{id:int}")]
+        public void AnnadirProducto(IProducto producto)
+        {
+            var ln = (ILogicaNegocio)HttpContext.Current.Application["logicaNegocio"];
+            ln.AgregarProductoACarrito(producto, cantidad, carrito);
+        }
     }
 }

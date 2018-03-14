@@ -11,6 +11,15 @@ var lf = {
 };
 var totalCarrito = 0;
 
+var carrito = [{ idProducto: 1, cantidad: 5 }, { idProducto: 2, cantidad: 3 }]
+sessionStorage.setItem('carrito', carrito);
+
+sessionStorage.getItem('carrito');
+
+
+
+
+
 $(function () {
    
 
@@ -19,12 +28,7 @@ $(function () {
 
    
 
-    $('#btnFactura').click(function (e) {
-        e.preventDefault();
-
-        $('#carrito').hide();
-        $('#factura').show();
-    });
+    
 
     //Eventos botones
     $('#btnAumentarCantidad').click(function (e) {
@@ -49,6 +53,9 @@ $(function () {
     $oferta = $('#productito');
 
     $ficha = $('#ficha');
+    $index = $('#index');
+    $ofertas = $('#ofertas');
+    $factura = $('#factura');
 
     $oferta.detach();
 
@@ -63,12 +70,25 @@ $(function () {
     //    $('#ficha').hide();
     //    $('#carrito').show();
     //});
+    $('#btnSeguir').click(function (e) {
+        e.preventDefault();
+        $('#ficha, #carrito, #factura, #login').hide();
+        $ofertas.show();
+        $index.show();
+    });
+    $('#btnFactura').click(facturarCarrito);
+    //$('#btnFactura').click(function (e) {
+    //    e.preventDefault();
+
+    //    $('#carrito').hide();
+    //    $('#factura').show();
+    //});
 
       
 });
 
 function ProductoOK(productos) {
-    $ofertas = $('#ofertas');
+   
 
     //$ofertas.empty();
     
@@ -93,7 +113,7 @@ function mostrarFicha(e) {
    e.preventDefault();
 
     //alert($(this).data('id'));
-    $('#index').hide(); //fadeOut(2000); //slideUp(); //hide();
+    $index.hide(); //fadeOut(2000); //slideUp(); //hide();
     $ofertas.hide();
     $ficha.show(); //fadeIn(2000); //slideDown(); //show();
     
@@ -104,6 +124,7 @@ function mostrarFicha(e) {
             "Id": prod.Id,
             "Precio": prod.Precio
         };
+
         $ficha.find('h2#etiqueta').text(p.Nombre);
         $ficha.find('img.thumbnail').attr('src', 'fotos/' + prod.Id + '.png').attr('height', '235px').attr('width', '235px');
         $ficha.find('#precio').text(prod.Precio + ' euros');
@@ -124,16 +145,26 @@ function formCarritoSubmit(e) {
         "ProductoId": $('input#id').val(),
         "FacturaId": 0
     };
-   
-   $carrito.find('td.nombre').text(p.Nombre);
-   $carrito.find('td.cantidad').text(lf.Cantidad);
-   $carrito.find('td.precio').text(p.Precio + ' euros');
+   $linea = $carrito.find('#lineaCarrito').clone();
+
+   if ($linea.find('td.nombre').text() == 'Prueba') {
+       $carrito.find('#lineaCarrito').detach();
+   }
+      
+   $linea.find('td.nombre').text(p.Nombre);
+   $linea.find('td.cantidad').text(lf.Cantidad);
+   $linea.find('td.precio').text(p.Precio + ' euros');
    totalCarrito += p.Precio * lf.Cantidad;
-   $carrito.find('img.thumbnail').attr('src', 'fotos/' + p.Id + '.png').attr('height', '40px').attr('width', '40px');
+   $linea.find('img.thumbnail').attr('src', 'fotos/' + p.Id + '.png').attr('height', '40px').attr('width', '40px');
    $carrito.find('td.total').text(totalCarrito + ' euros');
 
-   
-   
+   $carrito.find('tbody').append($linea);
+}
+
+function facturarCarrito(e) {
+    e.preventDefault();
+    $carrito.hide();
+    $factura.show();
 }
 
 
