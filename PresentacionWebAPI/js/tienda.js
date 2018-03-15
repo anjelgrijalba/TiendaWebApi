@@ -9,27 +9,16 @@ var lf = {
     "ProductoId": 0,
     "FacturaId": 0
 };
-var totalCarrito = 0;
+//var totalCarrito = 0;
 
-var carrito = [{ idProducto: 1, cantidad: 5 }, { idProducto: 2, cantidad: 3 }]
-sessionStorage.setItem('carrito', carrito);
+//var carrito = [{ idProducto: 1, cantidad: 5 }, { idProducto: 2, cantidad: 3 }]
+//sessionStorage.setItem('carrito', carrito);
 
-sessionStorage.getItem('carrito');
+//sessionStorage.getItem('carrito');
 
-
-
-
+//var url = "/api/Productos";
 
 $(function () {
-   
-
-   // Cambios de pantalla
-   
-
-   
-
-    
-
     //Eventos botones
     $('#btnAumentarCantidad').click(function (e) {
         e.preventDefault();
@@ -42,11 +31,7 @@ $(function () {
         $('#cantidad').get(0).value--;
         //$('#cantidad').val($('#cantidad').val() + 1);
     });
-});
 
-var url = "/api/Productos";
-
-$(function () {
     console.clear();
     $('#ficha, #carrito, #factura, #login').hide();
 

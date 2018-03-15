@@ -51,7 +51,7 @@ namespace PresentacionWebAPI.Controllers
         public void AnnadirProducto(IProducto producto)
         {
             var ln = (ILogicaNegocio)HttpContext.Current.Application["logicaNegocio"];
-            ln.AgregarProductoACarrito(producto, cantidad, carrito);
+            //ln.AgregarProductoACarrito(producto, cantidad, carrito);
         }
     }
 }
