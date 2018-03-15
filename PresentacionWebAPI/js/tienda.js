@@ -12,10 +12,23 @@ var lf = {
 var totalCarrito = 0;
 
 var carrito = [{ idProducto: 1, cantidad: 5 }, { idProducto: 2, cantidad: 3 }]
-sessionStorage.setItem('carrito', carrito);
+var carrito2 = {
+    item: "prod",
+    precio: 34.50,
+    cantidad:2
+}
+//sessionStorage.setItem('carrito', carrito);
 
-sessionStorage.getItem('carrito');
+//sessionStorage.getItem('carrito');
 
+
+//guardo
+//var jsonStr = JSON.stringify(cart);
+//sessionStorage.setItem("cart", jsonStr)
+
+//recupero
+//var cartValue = sessionStorage.getItem("cart");
+//var cartOBj = JSON.parse(cartValue);
 
 
 
@@ -25,23 +38,7 @@ $(function () {
 
    // Cambios de pantalla
    
-
-   
-
-    
-
-    //Eventos botones
-    $('#btnAumentarCantidad').click(function (e) {
-        e.preventDefault();
-        $('#cantidad').get(0).value++;
-        //$('#cantidad').val($('#cantidad').val() + 1);
-    });
-
-    $('#btnReducirCantidad').click(function (e) {
-        e.preventDefault();
-        $('#cantidad').get(0).value--;
-        //$('#cantidad').val($('#cantidad').val() + 1);
-    });
+  
 });
 
 var url = "/api/Productos";
@@ -60,6 +57,24 @@ $(function () {
     $oferta.detach();
 
     console.log($oferta);
+
+    //Eventos botones
+    $('#btnAumentarCantidad').click(function (e) {
+        e.preventDefault();
+        $('#cantidad').get(0).value++;
+        //$('#cantidad').val($('#cantidad').val() + 1);
+    });
+
+    $('#btnReducirCantidad').click(function (e) {
+        e.preventDefault();
+        $('#cantidad').get(0).value--;
+        //$('#cantidad').val($('#cantidad').val() + 1);
+    });
+
+    $('a#backend').click(function (e) {
+        e.preventDefault();
+        window.location.href = 'backend.html';
+    });
 
     $.getJSON(url, ProductoOK).fail(fallo);  //rellena lista de productos
 
@@ -116,6 +131,7 @@ function mostrarFicha(e) {
     $index.hide(); //fadeOut(2000); //slideUp(); //hide();
     $ofertas.hide();
     $ficha.show(); //fadeIn(2000); //slideDown(); //show();
+    $('#cantidad').get(0).value = 1;
     
     $.getJSON(this.href, function(prod) {
     //$.getJSON(url + "/" + prod.Id, function (prod) {
