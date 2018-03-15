@@ -10,11 +10,15 @@ $(function () {
     $('#btnProductos').click(function (e) {
         e.preventDefault();
         ocultarTodos();
-        $('#productos').show();
-        $.getJSON(url2, ProductoOK).fail(fallo);
-        
-        $('table').DataTable();
-
+        $productos.show();
+        if ($productos.find('tbody').hasClass("vacio"))
+        {
+            $productos.find('tbody').toggleClass('lleno vacio');
+            $lineaProducto = $('#productito');
+            $lineaProducto.detach();
+            $.getJSON(url1, ProductoOK).fail(fallo);
+            $('table').DataTable();
+        }
     });
 
     $('#btnUsuarios').click(function () {
@@ -33,13 +37,13 @@ $(function () {
 
 function ProductoOK(productoes) {
     $.each(productoes, function (key, prod) {
-        $lineaProducto = $('#productito').clone();
+        
+        $lineaProducto = $lineaProducto.clone();
+       
         $lineaProducto.find('img.thumbnail').attr('src', 'fotos/' + prod.Id + '.png').attr('height', '50').attr('width', '50');
         $lineaProducto.find('td.nombre').text(prod.Nombre);
         $lineaProducto.find('td.precio').text(prod.Precio);
         $lineaProducto.find('td.cantidad').text('ggdgdgd');
-
-        //$oferta.find('a#btnAddCarrito').attr("href", url + " / " + prod.Id);
 
         $productos.find('tbody').append($lineaProducto);
         
