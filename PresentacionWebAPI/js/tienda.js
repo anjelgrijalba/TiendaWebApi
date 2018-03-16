@@ -1,24 +1,62 @@
 var p = {
-    "Nombre":"",
-    "Id":"",
-    "Precio": "",
-    "Cantidad":""
+    Nombre: "",
+    Id: "",
+    Precio: ""
 };
 var lf = {
-    "Cantidad": 0,
-    "ProductoId": 0,
-    "FacturaId": 0
+    Cantidad: 0,
+    ProductoId: 0,
+    FacturaId: 0
 };
-//var totalCarrito = 0;
 
 //var carrito = [{ idProducto: 1, cantidad: 5 }, { idProducto: 2, cantidad: 3 }]
-//sessionStorage.setItem('carrito', carrito);
+//
 
-//sessionStorage.getItem('carrito');
-
-//var url = "/api/Productos";
+//
+'use strict'
+var carritoUsuario;
+var totalCarrito = 0;
 
 $(function () {
+   
+    var url = "/api/Productos";
+    carritoUsuario = JSON.parse(sessionStorage.getItem('carrito'));
+    if (!carritoUsuario) {
+        carrito =
+            {
+                usuario:
+                    {
+                        id: 1,
+                        Nick: 'Angel',
+                        Password: 'a'
+                    },
+                productos:
+                    [
+                        {
+                            producto:
+                                {
+                                    Id: 1,
+                                    Nombre: 'Producto 1',
+                                    Precio: 10
+                                },
+                            cantidad: 5
+                        }
+                        {
+                            producto:
+                                {
+                                    Id: 2,
+                                    Nombre: 'Producto 2',
+                                    Precio: 20
+                                },
+                            cantidad: 3
+                        }
+                    ]
+            };
+        sessionStorage.setItem('carrito', JSON.stringify('carrito', carrito));
+    } else {
+
+    }
+
     //Eventos botones
     $('#btnAumentarCantidad').click(function (e) {
         e.preventDefault();
@@ -41,13 +79,14 @@ $(function () {
     $index = $('#index');
     $ofertas = $('#ofertas');
     $factura = $('#factura');
+    $login = $('#login');
 
     $oferta.detach();
 
     console.log($oferta);
 
     $.getJSON(url, ProductoOK).fail(fallo);  //rellena lista de productos
-
+    $login.find('form')
     $('#frmCarrito').submit(formCarritoSubmit);
     //$('#frmCarrito').submit(function (e) {
     //    e.preventDefault();
@@ -69,14 +108,13 @@ $(function () {
     //    $('#factura').show();
     //});
 
-      
+
 });
 
 function ProductoOK(productos) {
-   
 
     //$ofertas.empty();
-    
+
     $.each(productos, function (key, prod) {
         $oferta = $oferta.clone();
 
@@ -86,7 +124,7 @@ function ProductoOK(productos) {
         $oferta.find('a#btnAddCarrito').prop('href', url + "/" + prod.Id).click(mostrarFicha);
 
         //$oferta.find('a#btnAddCarrito').attr("href", url + " / " + prod.Id);
-               
+
         $ofertas.append($oferta);
 
         console.log(key, prod);
@@ -95,24 +133,23 @@ function ProductoOK(productos) {
 
 
 function mostrarFicha(e) {
-   e.preventDefault();
+    e.preventDefault();
 
-    //alert($(this).data('id'));
     $index.hide(); //fadeOut(2000); //slideUp(); //hide();
     $ofertas.hide();
     $ficha.show(); //fadeIn(2000); //slideDown(); //show();
-    
-    $.getJSON(this.href, function(prod) {
-    //$.getJSON(url + "/" + prod.Id, function (prod) {
+
+    $.getJSON(this.href, function (prod) {
+        //$.getJSON(url + "/" + prod.Id, function (prod) {
         p = {
-            "Nombre": prod.Nombre,
-            "Id": prod.Id,
-            "Precio": prod.Precio
+            Nombre: prod.Nombre,
+            Id: prod.Id,
+            Precio: prod.Precio
         };
 
         $ficha.find('h2#etiqueta').text(p.Nombre);
-        $ficha.find('img.thumbnail').attr('src', 'fotos/' + prod.Id + '.png').attr('height', '235px').attr('width', '235px');
-        $ficha.find('#precio').text(prod.Precio + ' euros');
+        $ficha.find('img.thumbnail').attr('src', 'fotos/' + p.Id + '.png').attr('height', '235px').attr('width', '235px');
+        $ficha.find('#precio').text(p.Precio + ' euros');
         //$ficha.find('input#id').val(prod.Id);
     });
 }
@@ -120,30 +157,48 @@ function mostrarFicha(e) {
 function generarLinea(e) {
     e.preventDefault();
 }
+
+
 function formCarritoSubmit(e) {
     e.preventDefault();
     $ficha.hide();
     $carrito = $('#carrito').show();
+    //suyo
 
-   lf = {
-        "Cantidad": $('#cantidad').val(),
-        "ProductoId": $('input#id').val(),
-        "FacturaId": 0
+    
+
+    var linea = {
+        producto: {
+            Id:4,
+            Nombre:'',
+            Precio:23
+        },
+        cantidad:100
     };
-   $linea = $carrito.find('#lineaCarrito').clone();
+    carritoUsuario.push(linea);
+    guardarCarrito(carritoUsuario);
 
-   if ($linea.find('td.nombre').text() == 'Prueba') {
-       $carrito.find('#lineaCarrito').detach();
-   }
-      
-   $linea.find('td.nombre').text(p.Nombre);
-   $linea.find('td.cantidad').text(lf.Cantidad);
-   $linea.find('td.precio').text(p.Precio + ' euros');
-   totalCarrito += p.Precio * lf.Cantidad;
-   $linea.find('img.thumbnail').attr('src', 'fotos/' + p.Id + '.png').attr('height', '40px').attr('width', '40px');
-   $carrito.find('td.total').text(totalCarrito + ' euros');
 
-   $carrito.find('tbody').append($linea);
+    lf = {
+        Cantidad: $('#cantidad').val(),
+        ProductoId: $('input#id').val(),
+        FacturaId: 0
+    };
+
+    $linea = $carrito.find('#lineaCarrito').clone();
+
+    if ($linea.find('td.nombre').text() == 'Prueba') {
+        $carrito.find('#lineaCarrito').detach();
+    }
+
+    $linea.find('td.nombre').text(p.Nombre);
+    $linea.find('td.cantidad').text(lf.Cantidad);
+    $linea.find('td.precio').text(p.Precio + ' euros');
+    totalCarrito += p.Precio * lf.Cantidad;
+    $linea.find('img.thumbnail').attr('src', 'fotos/' + p.Id + '.png').attr('height', '40px').attr('width', '40px');
+    $carrito.find('td.total').text(totalCarrito + ' euros');
+
+    $carrito.find('tbody').append($linea);
 }
 
 function facturarCarrito(e) {
@@ -163,4 +218,12 @@ function fallo(jqXHR, textStatus, errorThrown) {
 
     //$('#cuadroerror').show();
     //$('#textoerror').text(errorThrown);
+}
+
+function guardarCarrito(carrito) {
+    sessionStorage.setItem('carrito', JSON.stringify('carrito', carrito));
+}
+
+function cargarCarrito(){
+    return JSON.parse(sessionStorage.getItem('carrito'));
 }
