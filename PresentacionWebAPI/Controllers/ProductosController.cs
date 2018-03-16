@@ -12,17 +12,18 @@ namespace PresentacionWebAPI.Controllers
 {
     public class ProductosController : ApiController
     {
+        private static ILogicaNegocio ln = (ILogicaNegocio)HttpContext.Current.Application["logicaNegocio"];
+
         // GET: api/Productos
         public IEnumerable<IProducto> Get()
         {
-             var ln = (ILogicaNegocio)HttpContext.Current.Application["logicaNegocio"];
+             
              return ln.ListadoProductos();
         }
 
         // GET: api/Productos/5
         public IProducto Get(int id)
         {
-            var ln = (ILogicaNegocio)HttpContext.Current.Application["logicaNegocio"];
             IProducto producto = ln.BuscarProductoPorId(id);
             if (producto == null)
             {

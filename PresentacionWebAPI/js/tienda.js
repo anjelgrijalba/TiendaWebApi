@@ -13,13 +13,15 @@ var lf = {
 //
 
 //
-
+'use strict'
+var carritoUsuario;
+var totalCarrito = 0;
 
 $(function () {
-    var totalCarrito = 0;
+   
     var url = "/api/Productos";
-    var carrito = JSON.parse(sessionStorage.getItem('carrito'));
-    if (!carrito) {
+    carritoUsuario = JSON.parse(sessionStorage.getItem('carrito'));
+    if (!carritoUsuario) {
         carrito =
             {
                 usuario:
@@ -161,6 +163,21 @@ function formCarritoSubmit(e) {
     e.preventDefault();
     $ficha.hide();
     $carrito = $('#carrito').show();
+    //suyo
+
+    
+
+    var linea = {
+        producto: {
+            Id:4,
+            Nombre:'',
+            Precio:23
+        },
+        cantidad:100
+    };
+    carritoUsuario.push(linea);
+    guardarCarrito(carritoUsuario);
+
 
     lf = {
         Cantidad: $('#cantidad').val(),
@@ -201,4 +218,12 @@ function fallo(jqXHR, textStatus, errorThrown) {
 
     //$('#cuadroerror').show();
     //$('#textoerror').text(errorThrown);
+}
+
+function guardarCarrito(carrito) {
+    sessionStorage.setItem('carrito', JSON.stringify('carrito', carrito));
+}
+
+function cargarCarrito(){
+    return JSON.parse(sessionStorage.getItem('carrito'));
 }
