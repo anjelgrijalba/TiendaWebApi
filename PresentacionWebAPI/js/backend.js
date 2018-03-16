@@ -1,8 +1,9 @@
 $(function () {
-    $('table').DataTable();
-
+   
     var url1 = "/api/Productos" //controlador de la tienda
-    var url2 = "/api/ProductoBackend" //controlador del backend
+    var url2 = "/api/UsuariosEF" //controlador del backend usuarios
+    var url3 = "/api/UsuariosLN" //controlador del backend usuarios
+
     ocultarTodos();
     $usuarios = $('#usuarios');
     $productos = $('#productos');
@@ -17,13 +18,20 @@ $(function () {
             $lineaProducto = $('#productito');
             $lineaProducto.detach();
             $.getJSON(url1, ProductoOK).fail(fallo);
-            $('table').DataTable();
         }
     });
 
-    $('#btnUsuarios').click(function () {
+    $('#btnUsuarios').click(function (e) {
+        e.preventDefault();
         ocultarTodos();
         $usuarios.show();
+        if ($usuarios.find('tbody').hasClass("vacio"))
+        {
+            $usuarios.find('tbody').toggleClass('lleno vacio');
+            $nuevoUsuario = $('#cadaUsuario');
+            $nuevoUsuario.detach();
+            $.getJSON(url2, UsuariosOK).fail(fallo);
+        }
         
     });
 
@@ -35,8 +43,23 @@ $(function () {
 
 });
 
-function ProductoOK(productoes) {
-    $.each(productoes, function (key, prod) {
+function UsuariosOK(usuarios) {
+    $.each(usuarios, function (key, us) {
+
+        $nuevoUsuario = $nuevoUsuario.clone();
+       
+        $nuevoUsuario.find('td.nombre').text(us.Nick);
+        $nuevoUsuario.find('td.apellido').text("Pérez " + us.Id);
+        $nuevoUsuario.find('td.password').text(us.Contra);
+
+        $usuarios.find('tbody').append($nuevoUsuario);
+
+        console.log(key, us);
+    });
+}
+
+function ProductoOK(productos) {
+    $.each(productos, function (key, prod) {
         
         $lineaProducto = $lineaProducto.clone();
        

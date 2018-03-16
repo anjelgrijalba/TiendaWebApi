@@ -1,22 +1,20 @@
 var p = {
-    "Nombre":"",
-    "Id":"",
-    "Precio": "",
-    "Cantidad":""
+    Nombre:"",
+    Id:"",
+    Precio: ""   
 };
 var lf = {
-    "Cantidad": 0,
-    "ProductoId": 0,
-    "FacturaId": 0
+    Cantidad: 0,
+    ProductoId: 0,
+    FacturaId: 0
 };
-//var totalCarrito = 0;
+var totalCarrito = 0;
 
 //var carrito = [{ idProducto: 1, cantidad: 5 }, { idProducto: 2, cantidad: 3 }]
 //sessionStorage.setItem('carrito', carrito);
 
 //sessionStorage.getItem('carrito');
-
-//var url = "/api/Productos";
+var url = "/api/Productos";
 
 $(function () {
     //Eventos botones
@@ -74,7 +72,6 @@ $(function () {
 
 function ProductoOK(productos) {
    
-
     //$ofertas.empty();
     
     $.each(productos, function (key, prod) {
@@ -97,7 +94,6 @@ function ProductoOK(productos) {
 function mostrarFicha(e) {
    e.preventDefault();
 
-    //alert($(this).data('id'));
     $index.hide(); //fadeOut(2000); //slideUp(); //hide();
     $ofertas.hide();
     $ficha.show(); //fadeIn(2000); //slideDown(); //show();
@@ -105,14 +101,14 @@ function mostrarFicha(e) {
     $.getJSON(this.href, function(prod) {
     //$.getJSON(url + "/" + prod.Id, function (prod) {
         p = {
-            "Nombre": prod.Nombre,
-            "Id": prod.Id,
-            "Precio": prod.Precio
+            Nombre: prod.Nombre,
+            Id: prod.Id,
+            Precio: prod.Precio
         };
-
+       
         $ficha.find('h2#etiqueta').text(p.Nombre);
-        $ficha.find('img.thumbnail').attr('src', 'fotos/' + prod.Id + '.png').attr('height', '235px').attr('width', '235px');
-        $ficha.find('#precio').text(prod.Precio + ' euros');
+        $ficha.find('img.thumbnail').attr('src', 'fotos/' + p.Id + '.png').attr('height', '235px').attr('width', '235px');
+        $ficha.find('#precio').text(p.Precio + ' euros');
         //$ficha.find('input#id').val(prod.Id);
     });
 }
@@ -126,10 +122,11 @@ function formCarritoSubmit(e) {
     $carrito = $('#carrito').show();
 
    lf = {
-        "Cantidad": $('#cantidad').val(),
-        "ProductoId": $('input#id').val(),
-        "FacturaId": 0
+        Cantidad: $('#cantidad').val(),
+        ProductoId: $('input#id').val(),
+        FacturaId: 0
     };
+   
    $linea = $carrito.find('#lineaCarrito').clone();
 
    if ($linea.find('td.nombre').text() == 'Prueba') {
