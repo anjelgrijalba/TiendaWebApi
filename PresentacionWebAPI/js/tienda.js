@@ -39,13 +39,14 @@ $(function () {
     $index = $('#index');
     $ofertas = $('#ofertas');
     $factura = $('#factura');
+    $login = $('#login');
 
     $oferta.detach();
 
     console.log($oferta);
 
     $.getJSON(url, ProductoOK).fail(fallo);  //rellena lista de productos
-
+    $login.find('form')
     $('#frmCarrito').submit(formCarritoSubmit);
     //$('#frmCarrito').submit(function (e) {
     //    e.preventDefault();
