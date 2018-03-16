@@ -7,6 +7,8 @@ namespace PresentacionWebAPI.Models
 {
     public class CarritoDTO
     {
-        private int IdUsuario
+        public int IdUsuario { get; set; }
+        public int[] IdsProductos { get; set; }
+        public int [] CantidadesProductos { get; set; }
     }
 }
