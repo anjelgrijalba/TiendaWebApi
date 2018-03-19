@@ -14,6 +14,7 @@ namespace PresentacionAspNetMvc.Controllers
 {
     public class FacturasController : ApiController
     {
+
         private static ILogicaNegocio ln = (ILogicaNegocio)HttpContext.Current.Application["logicaNegocio"];
        
         // GET: api/Facturas
