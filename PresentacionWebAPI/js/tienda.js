@@ -3,16 +3,7 @@ var p = {
     Nombre: "",
     Precio: ""
 };
-//var lf = {
-//    Cantidad: 0,
-//    ProductoId: 0,
-//    FacturaId: 0
-//};
 
-//var carrito = [{ idProducto: 1, cantidad: 5 }, { idProducto: 2, cantidad: 3 }]
-//
-
-//
 'use strict';
 var carritoUsuario;
 var totalCarrito = 0;
@@ -26,7 +17,7 @@ var $oferta;
 var $carrito;
 
 $(function () {
-   
+
     url = "/api/Productos";
     carritoUsuario = cargarCarrito();
     if (!carritoUsuario) {
@@ -61,7 +52,7 @@ $(function () {
                     ]
             };
         guardarCarrito(carritoUsuario);
-       
+
     }
 
     //Eventos botones
@@ -127,7 +118,7 @@ function ProductoOK(productos) {
         $oferta.find('h3#nombre').text(prod.Nombre);
         $oferta.find('a#btnAddCarrito').data('id', prod.Id);
         $oferta.find('a#btnAddCarrito').prop('href', url + "/" + prod.Id).click(mostrarFicha);
-        
+
         //$oferta.find('a#btnAddCarrito').attr("href", url + " / " + prod.Id);
 
         $ofertas.append($oferta);
@@ -142,7 +133,7 @@ function mostrarFicha(e) {
 
     $.getJSON(this.href, function (prod) {
         //$.getJSON(url + "/" + prod.Id, function (prod) {
-        
+
         p = {
             Id: parseInt(prod.Id),
             Nombre: prod.Nombre,
@@ -152,8 +143,8 @@ function mostrarFicha(e) {
         $ficha.find('h2#etiqueta').text(p.Nombre);
         $ficha.find('img.thumbnail').attr('src', 'fotos/' + p.Id + '.png').attr('height', '235px').attr('width', '235px');
         $ficha.find('#precio').text(p.Precio + ' euros');
-        $('#frmCarrito input[name=id]').text(p.Id);
-        $('#frmCarrito input[name=cantidad]').val(1)
+        $('#frmCarrito input[name=id]').val(p.Id);
+        $('#frmCarrito input[name=cantidad]').val(1);
 
         //$ficha.find('input#id').val(prod.Id);
     });
@@ -170,7 +161,7 @@ function generarLinea(e) {
 
 function formCarritoSubmit(e) {
     e.preventDefault();
-   
+
     //suyo
     var id = $('#frmCarrito input[name=id]').val();
     var cantidad = $('#frmCarrito input[name=cantidad]').val();
@@ -178,53 +169,59 @@ function formCarritoSubmit(e) {
 
     //$.getJSON('api/Productos/' + id, function (producto) {
 
-        var linea = {
-            producto: p,
-            cantidad: parseInt(cantidad)
-        };
+    var linea = {
+        producto: p,
+        cantidad: parseInt(cantidad)
+    };
 
-        //var linea = {
-        //    producto: {
-        //        Id:4,
-        //        Nombre:'',
-        //        Precio:23
-        //    },
-        //    cantidad:100
-        //};
-        carritoUsuario = cargarCarrito();
-        carritoUsuario.productos.push(linea);
-        guardarCarrito(carritoUsuario);
-   
+    carritoUsuario = cargarCarrito();
+    var repetido = false;
 
-    //lf = {
-    //    Cantidad: $('#cantidad').val(),
-    //    ProductoId: $('input#id').val(),
-    //    FacturaId: 0
-    //};
-
-    $linea = $carrito.find('#lineaCarrito').clone();
-
-    if ($linea.find('td.nombre').text() === 'Prueba') {
-        $carrito.find('#lineaCarrito').detach();
+    for (i = 0; i < carritoUsuario.productos.length; i++)
+    {
+        if (carritoUsuario.productos[i].producto.Id === ParseInt(id))
+        {
+            var c = carritoUsuario.productos[i].cantidad++;
+            $lineaR = $('.lineaCarrito ')[i];
+            $lineaR.find('td.cantidad').text(c);
+            console.log('repetido');
+            repetido = true;
+            return;
+        }
+      
     }
+    if (!repetido)
+    {
+        $linea = $carrito.find('.lineaCarrito').last().clone();
+       
+        if ($linea.find('td.nombre').text() === 'Prueba') {
+            $carrito.find('.lineaCarrito').detach();
+        }
+        $linea.attr("data-id", id);
+       
 
-    $linea.find('td.nombre').text(p.Nombre);
-    $linea.find('td.cantidad').text(linea.cantidad);
-    $linea.find('td.precio').text(p.Precio + ' euros');
-    totalCarrito += p.Precio * linea.Cantidad;
-    $linea.find('img.thumbnail').attr('src', 'fotos/' + p.Id + '.png').attr('height', '40px').attr('width', '40px');
-    $carrito.find('td.total').text(totalCarrito + ' euros');
+        $linea.find('td.nombre').text(p.Nombre);
+        $linea.find('td.cantidad').text(linea.cantidad);
+        $linea.find('td.precio').text(p.Precio + ' euros');
+        totalLinea = p.Precio * linea.cantidad;
+        $linea.find('td.totalLinea').text(totalLinea);
+        totalCarrito += totalLinea;
+        $linea.find('img.thumbnail').attr('src', 'fotos/' + p.Id + '.png').attr('height', '40px').attr('width', '40px');
+        $carrito.find('td.total').text(totalCarrito + ' euros');
 
-    $carrito.find('tbody').append($linea);
+        $carrito.find('tbody').append($linea);
+        carritoUsuario.productos.push(linea);
+    }
+    
+    guardarCarrito(carritoUsuario);
 
     $ficha.hide();
-        $carrito = $('#carrito').show();
-    //});
+    $carrito = $('#carrito').show();
 }
 
 function facturarCarrito(e) {
     e.preventDefault();
-   
+
     var carritoDTO = {};
     var carrito = cargarCarrito();
     carritoDTO.IdUsuario = carrito.usuario.Id;
@@ -269,6 +266,6 @@ function guardarCarrito(carrito) {
     sessionStorage.setItem('carrito', JSON.stringify(carrito));
 }
 
-function cargarCarrito(){
+function cargarCarrito() {
     return JSON.parse(sessionStorage.getItem('carrito'));
 }
