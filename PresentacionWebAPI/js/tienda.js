@@ -4,7 +4,7 @@ var p = {
     Precio: ""
 };
 
-'use strict';
+"use strict";
 var carritoUsuario;
 var totalCarrito = 0;
 var url;
@@ -15,6 +15,7 @@ var $factura;
 var $login;
 var $oferta;
 var $carrito;
+var $lineaCarrito;
 
 $(function () {
 
@@ -78,9 +79,10 @@ $(function () {
     $factura = $('#factura');
     $login = $('#login');
     $carrito = $('#carrito');
+    $lineaCarrito = $('.lineaCarrito');
 
     $oferta.detach();  //borra la oferta original de modelo
-
+    $lineaCarrito.detach();   //y la linea del carrito
     console.log($oferta);
 
     $.getJSON(url, ProductoOK).fail(fallo);  //rellena lista de productos
@@ -158,14 +160,14 @@ function generarLinea(e) {
     e.preventDefault();
 }
 
-
 function formCarritoSubmit(e) {
     e.preventDefault();
+    $ficha.hide();
 
     //suyo
-    var id = $('#frmCarrito input[name=id]').val();
+    var idStr = $('#frmCarrito input[name=id]').val();
+    var id = parseInt(idStr);
     var cantidad = $('#frmCarrito input[name=cantidad]').val();
-
 
     //$.getJSON('api/Productos/' + id, function (producto) {
 
@@ -176,46 +178,43 @@ function formCarritoSubmit(e) {
 
     carritoUsuario = cargarCarrito();
     var repetido = false;
+    var totalLinea;
+
 
     for (i = 0; i < carritoUsuario.productos.length; i++)
     {
-        if (carritoUsuario.productos[i].producto.Id === ParseInt(id))
+        if (carritoUsuario.productos[i].producto.Id == id)
         {
-            var c = carritoUsuario.productos[i].cantidad++;
-            $lineaR = $('.lineaCarrito ')[i];
+            $lineaR = $('.lineaCarrito[data-id="' + id + '"]');
+            var c = carritoUsuario.productos[i].cantidad += parseInt(cantidad);
             $lineaR.find('td.cantidad').text(c);
-            console.log('repetido');
+            totalLinea = carritoUsuario.productos[i].producto.Precio * c;
+            $lineaR.find('td.totalLinea').text(totalLinea);
+            totalCarrito += carritoUsuario.productos[i].producto.Precio * parseInt(cantidad);
+            $carrito.find('td.total').text(totalCarrito + ' euros');
+            console.log('producto ya en carrito');
             repetido = true;
-            return;
+            break;
         }
-      
     }
     if (!repetido)
     {
-        $linea = $carrito.find('.lineaCarrito').last().clone();
-       
-        if ($linea.find('td.nombre').text() === 'Prueba') {
-            $carrito.find('.lineaCarrito').detach();
-        }
-        $linea.attr("data-id", id);
-       
+        $lineaCarrito = $lineaCarrito.clone();
+        $lineaCarrito.attr("data-id", id);
 
-        $linea.find('td.nombre').text(p.Nombre);
-        $linea.find('td.cantidad').text(linea.cantidad);
-        $linea.find('td.precio').text(p.Precio + ' euros');
+        $lineaCarrito.find('td.nombre').text(p.Nombre);
+        $lineaCarrito.find('td.cantidad').text(linea.cantidad);
+        $lineaCarrito.find('td.precio').text(p.Precio + ' euros');
         totalLinea = p.Precio * linea.cantidad;
-        $linea.find('td.totalLinea').text(totalLinea);
+        $lineaCarrito.find('td.totalLinea').text(totalLinea);
         totalCarrito += totalLinea;
-        $linea.find('img.thumbnail').attr('src', 'fotos/' + p.Id + '.png').attr('height', '40px').attr('width', '40px');
+        $lineaCarrito.find('img.thumbnail').attr('src', 'fotos/' + p.Id + '.png').attr('height', '40px').attr('width', '40px');
         $carrito.find('td.total').text(totalCarrito + ' euros');
 
-        $carrito.find('tbody').append($linea);
+        $carrito.find('tbody').append($lineaCarrito);
         carritoUsuario.productos.push(linea);
     }
-    
     guardarCarrito(carritoUsuario);
-
-    $ficha.hide();
     $carrito = $('#carrito').show();
 }
 
@@ -248,8 +247,6 @@ function facturarCarrito(e) {
     $carrito.hide();
     $factura.show();
 }
-
-
 
 function fallo(jqXHR, textStatus, errorThrown) {
     if (jqXHR.readyState === 0) {
