@@ -296,3 +296,14 @@ function guardarCarrito(carrito) {
 function cargarCarrito() {
     return JSON.parse(sessionStorage.getItem('carrito'));
 }
+
+
+
+preguntas:
+
+
+donde declarar las varporque si las declaras dentro de una funcion sirven para todas
+
+
+porque llama a push desde hallax ? que pasa con las factura que envia ?
+    hago un get de factura o cojo los datos del carrito de la memoria ?
