@@ -16,6 +16,7 @@ var $login;
 var $oferta;
 var $carrito;
 var $lineaCarrito;
+var $lineaFactura;
 
 $(function () {
 
@@ -26,7 +27,7 @@ $(function () {
             {
                 usuario:
                     {
-                        id: 1,
+                        Id: 1,
                         Nick: 'Angel',
                         Password: 'a'
                     },
@@ -80,6 +81,7 @@ $(function () {
     $login = $('#login');
     $carrito = $('#carrito');
     $lineaCarrito = $('.lineaCarrito');
+    $lineaFactura = $('.lineaFactura');
 
     $oferta.detach();  //borra la oferta original de modelo
     $lineaCarrito.detach();   //y la linea del carrito
@@ -171,10 +173,7 @@ function formCarritoSubmit(e) {
 
     //$.getJSON('api/Productos/' + id, function (producto) {
 
-    var linea = {
-        producto: p,
-        cantidad: parseInt(cantidad)
-    };
+   
 
     carritoUsuario = cargarCarrito();
     var repetido = false;
@@ -187,6 +186,10 @@ function formCarritoSubmit(e) {
         {
             $lineaR = $('.lineaCarrito[data-id="' + id + '"]');
             var c = carritoUsuario.productos[i].cantidad += parseInt(cantidad);
+            var linea = {
+                producto: p,
+                cantidad: c
+            };
             $lineaR.find('td.cantidad').text(c);
             totalLinea = carritoUsuario.productos[i].producto.Precio * c;
             $lineaR.find('td.totalLinea').text(totalLinea);
@@ -199,6 +202,11 @@ function formCarritoSubmit(e) {
     }
     if (!repetido)
     {
+        var linea = {
+            producto: p,
+            cantidad: parseInt(cantidad)
+        };
+
         $lineaCarrito = $lineaCarrito.clone();
         $lineaCarrito.attr("data-id", id);
 
@@ -212,6 +220,7 @@ function formCarritoSubmit(e) {
         $carrito.find('td.total').text(totalCarrito + ' euros');
 
         $carrito.find('tbody').append($lineaCarrito);
+       
         carritoUsuario.productos.push(linea);
     }
     guardarCarrito(carritoUsuario);
@@ -227,7 +236,7 @@ function facturarCarrito(e) {
     carritoDTO.IdsProductos = [];
     carritoDTO.CantidadesProductos = [];
 
-    $each(carrito.productos, function (clave, linea) {
+    $.each(carrito.productos, function (clave, linea) {
         carritoDTO.IdsProductos.push(linea.producto.Id);
         carritoDTO.CantidadesProductos.push(linea.cantidad);
     });
@@ -243,6 +252,27 @@ function facturarCarrito(e) {
     }).fail(function () {
         alert('Ha habido un error al crear la factura en el servidor');
     });
+
+    $lineaFactura = $lineaFactura.clone();
+
+    //$.each(libroFacturas, function (clave, factura) {
+        
+    //});
+
+
+    //foreach 
+    //$lineaFactura.find('td.nombre').text(carrito.productos[i].);
+    //$lineaFactura.find('td.cantidad').text(linea.cantidad);
+    //$lineaFactura.find('td.precio').text(p.Precio + ' euros');
+    //totalLinea = p.Precio * linea.cantidad;
+    //$lineaFactura.find('td.totalLinea').text(totalLinea);
+    //totalCarrito += totalLinea;
+    //$lineaFactura.find('img.thumbnail').attr('src', 'fotos/' + p.Id + '.png').attr('height', '40px').attr('width', '40px');
+    //$carrito.find('td.total').text(totalCarrito + ' euros');
+
+
+
+
 
     $carrito.hide();
     $factura.show();
