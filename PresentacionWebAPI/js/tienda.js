@@ -249,6 +249,10 @@ function facturarCarrito(e) {
         contentType: 'application/json'
     }).done(function (factura) {
         console.log(factura);
+
+        //aqui todo el codigo de rellenar la factura en pantalla
+
+
     }).fail(function () {
         alert('Ha habido un error al crear la factura en el servidor');
     });
