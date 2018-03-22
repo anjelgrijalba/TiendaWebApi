@@ -85,6 +85,8 @@ $(function () {
 
     $oferta.detach();  //borra la oferta original de modelo
     $lineaCarrito.detach();   //y la linea del carrito
+    $lineaFactura.detach();  // y en factura
+
     console.log($oferta);
 
     $.getJSON(url, ProductoOK).fail(fallo);  //rellena lista de productos
@@ -236,11 +238,9 @@ function facturarCarrito(e) {
     carritoDTO.IdsProductos = [];
     carritoDTO.CantidadesProductos = [];
 
-    $.each(carrito.productos, function (clave, linea) {
-        carritoDTO.IdsProductos.push(linea.producto.Id);
-        carritoDTO.CantidadesProductos.push(linea.cantidad);
-    });
+    
     console.log(carritoDTO);
+
     $.ajax({
         url: 'api/Facturas',
         method: 'POST',
@@ -255,24 +255,26 @@ function facturarCarrito(e) {
 
     $lineaFactura = $lineaFactura.clone();
 
-    //$.each(libroFacturas, function (clave, factura) {
-        
-    //});
+    carrito = cargarCarrito();
+
+    totalCarrito = 0;
+    $.each(carrito.productos, function (clave, linea) {
+
+        $lineaFactura = $lineaFactura.clone();
+        $lineaFactura.find('td.nombre').text(linea.producto.Nombre);
+        $lineaFactura.find('td.cantidad').text(linea.cantidad);
+        $lineaFactura.find('td.precio').text(linea.producto.Precio + ' euros');
+        totalLinea = linea.producto.Precio * linea.cantidad;
+        $lineaFactura.find('td.totalLinea').text(totalLinea);
+        totalCarrito += totalLinea;
+        $lineaFactura.find('img.thumbnail').attr('src', 'fotos/' + linea.producto.Id + '.png').attr('height', '40px').attr('width', '40px');
+       
+
+        $factura.find('tbody').append($lineaFactura);
 
 
-    //foreach 
-    //$lineaFactura.find('td.nombre').text(carrito.productos[i].);
-    //$lineaFactura.find('td.cantidad').text(linea.cantidad);
-    //$lineaFactura.find('td.precio').text(p.Precio + ' euros');
-    //totalLinea = p.Precio * linea.cantidad;
-    //$lineaFactura.find('td.totalLinea').text(totalLinea);
-    //totalCarrito += totalLinea;
-    //$lineaFactura.find('img.thumbnail').attr('src', 'fotos/' + p.Id + '.png').attr('height', '40px').attr('width', '40px');
-    //$carrito.find('td.total').text(totalCarrito + ' euros');
-
-
-
-
+    });
+   $factura.find('th.total').text(totalCarrito + ' euros');
 
     $carrito.hide();
     $factura.show();
@@ -299,11 +301,11 @@ function cargarCarrito() {
 
 
 
-preguntas:
+//preguntas:
 
 
-donde declarar las varporque si las declaras dentro de una funcion sirven para todas
+//donde declarar las varporque si las declaras dentro de una funcion sirven para todas
 
 
-porque llama a push desde hallax ? que pasa con las factura que envia ?
-    hago un get de factura o cojo los datos del carrito de la memoria ?
+//porque llama a push desde ayax ? que pasa con las factura que envia ?
+//    hago un get de factura o cojo los datos del carrito de la memoria ?
